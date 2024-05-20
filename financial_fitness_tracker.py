@@ -1,4 +1,3 @@
-# Financial Fitness Tracker 
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,9 +13,9 @@ if 'score' not in st.session_state:
     st.session_state['score'] = 0
 
 # Function to add new transaction
-def add_transaction():
+def add_transaction(date, transaction_type, category, amount):
     new_data = {'Date': date, 'Type': transaction_type, 'Category': category, 'Amount': amount}
-    st.session_state['data'] = st.session_state['data'].append(new_data, ignore_index=True)
+    st.session_state['data'] = pd.concat([st.session_state['data'], pd.DataFrame([new_data])], ignore_index=True)
     update_score()
 
 # Function to update financial fitness score
@@ -36,7 +35,7 @@ transaction_type = st.sidebar.selectbox("Type", ["Income", "Expense"])
 category = st.sidebar.selectbox("Category", ["Salary", "Food", "Transportation", "Entertainment", "Others"])
 amount = st.sidebar.number_input("Amount", min_value=0.0, format="%.2f")
 if st.sidebar.button("Add Transaction"):
-    add_transaction()
+    add_transaction(date, transaction_type, category, amount)
     st.sidebar.success("Transaction added!")
 
 # Display data
